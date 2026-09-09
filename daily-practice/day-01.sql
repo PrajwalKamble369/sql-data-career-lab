@@ -62,3 +62,33 @@ WHERE state = 'Maharashtra'
 ORDER BY customer_id ASC
 LIMIT 25;
 
+/*
+High-Value Products
+
+Using the products table, return:
+
+product_id
+product_name
+brand
+price
+product_rating
+
+Requirements
+Only products where price > 50,000
+Sort by price from highest to lowest
+Return only the top 20
+Do not use SELECT *
+*/
+
+SELECT 
+    product_id,
+    product_name,
+    brand,
+    price,
+    product_rating
+FROM
+    products
+WHERE
+    price > 50000
+ORDER BY price DESC
+LIMIT 20;
