@@ -126,3 +126,37 @@ AND
 ORDER BY
     customer_id
 LIMIT 30;
+
+/*
+Recent Delivered Orders
+
+Use the orders table.
+
+Return:
+
+order_id
+customer_id
+order_date
+total_amount
+sales_channel
+Requirements
+Only orders where order_status = 'delivered'
+Only orders placed during 2026
+Sort by order_date from newest → oldest
+Return only 25 rows
+*/
+
+SELECT
+    order_id,
+    customer_id,
+    order_date,
+    total_amount,
+    sales_channel
+FROM
+    orders
+WHERE
+    order_status = 'delivered'
+    AND order_date >= '2026-01-01 00:00:00'
+    AND order_date < '2027-01-01 00:00:00'
+ORDER BY order_date DESC
+LIMIT 25;
