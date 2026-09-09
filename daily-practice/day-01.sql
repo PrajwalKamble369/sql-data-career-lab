@@ -92,3 +92,37 @@ WHERE
     price > 50000
 ORDER BY price DESC
 LIMIT 20;
+
+/*
+Using the customers table, return:
+
+customer_id
+first_name
+last_name
+email
+customer_segment
+is_active
+Requirements
+customer_segment must be Premium
+Customer must be active
+Sort by customer_id ascending
+Return only the first 30
+Don't use SELECT *
+*/
+
+SELECT
+    customer_id,
+    first_name,
+    last_name,
+    email,
+    customer_segment,
+    is_active
+FROM
+    customers
+WHERE 
+    customer_segment = 'Premium'
+AND
+    is_active = TRUE
+ORDER BY
+    customer_id
+LIMIT 30;
