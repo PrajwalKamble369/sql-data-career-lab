@@ -79,3 +79,20 @@ average order value
 Sort by total order value descending.
 
 Concept focus: GROUP BY + HAVING
+
+*/
+
+SELECT
+    customer_id,
+    COUNT(order_id) AS number_of_orders,
+    SUM(total_amount) AS total_order_value,
+    AVG(total_amount)AS avg_order_value
+FROM
+    orders
+GROUP BY
+    customer_id
+HAVING
+    COUNT(order_id) >= 5
+    AND
+    SUM(total_amount) > 100000;
+
