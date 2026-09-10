@@ -96,3 +96,50 @@ HAVING
     AND
     SUM(total_amount) > 100000;
 
+/*
+4. Customer + Order Analysis — JOIN
+
+Using customers and orders, return the 20 customers with the highest total delivered order value.
+
+Return:
+
+customer_id
+first_name
+last_name
+city
+total delivered order value
+number of delivered orders
+
+Only include customers who have at least 3 delivered orders.
+
+Concept focus: JOIN + filtering + aggregation + GROUP BY + HAVING
+
+*/
+
+
+SELECT
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    c.city,
+    SUM(o.total_amount) AS total_delivered_order_value,
+    COUNT(o.order_id) AS delivered_ordes
+FROM
+    customers c
+JOIN
+    orders o
+ON 
+    c.customer_id = o.customer_id
+WHERE
+    o.order_status = 'delivered'
+GROUP BY
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    c.city
+HAVING
+    COUNT(o.order_id) >= 3
+ORDER BY
+    total_delivered_order_value DESC
+LIMIT 20
+;
