@@ -143,3 +143,38 @@ ORDER BY
     total_delivered_order_value DESC
 LIMIT 20
 ;
+
+
+/*
+
+5. Monthly Sales Trend — Date Analysis
+
+Using orders, calculate monthly delivered sales for 2026.
+
+Return:
+
+month
+number of delivered orders
+total delivered sales
+average delivered order value
+
+Sort chronologically from January → December.
+
+Concept focus: date/time extraction + aggregation + grouping.
+
+*/
+
+SELECT
+    EXTRACT(MONTH FROM order_date) AS month,
+    COUNT(order_id) AS number_of_delivered_orders,
+    SUM(total_amount) AS total_delivered_sales,
+    AVG(total_amount) AS average_delivered_order_value
+FROM
+    orders
+WHERE
+    order_status = 'delivered'
+    AND EXTRACT(YEAR FROM order_date) = 2026
+GROUP BY
+    EXTRACT(MONTH FROM order_date)
+ORDER BY
+    month ASC;
