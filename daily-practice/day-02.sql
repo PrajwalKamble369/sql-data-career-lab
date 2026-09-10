@@ -50,7 +50,7 @@ Concept focus: COUNT, SUM, AVG, GROUP BY, ORDER B
 
 
 SELECT
-    sales_channel
+    sales_channel,
     COUNT(order_id) AS number_of_orders,
     SUM(total_amount) AS total_sales,
     AVG(total_amount) AS avg_order_value
@@ -94,7 +94,7 @@ GROUP BY
 HAVING
     COUNT(order_id) >= 5
     AND
-    SUM(total_amount) > 100000;
+    SUM(total_amount) >= 100000;
 
 /*
 4. Customer + Order Analysis — JOIN
