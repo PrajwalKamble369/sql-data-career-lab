@@ -33,3 +33,49 @@ ORDER BY
     total_amount DESC
 LIMIT 20;
 
+/*
+2. Sales Channel Summary — Aggregation
+
+Using orders, calculate for each sales_channel:
+
+Number of orders
+Total sales (SUM(total_amount))
+Average order value
+
+Sort by total sales highest → lowest.
+
+Concept focus: COUNT, SUM, AVG, GROUP BY, ORDER B
+*/
+
+
+
+SELECT
+    sales_channel
+    COUNT(order_id) AS number_of_orders,
+    SUM(total_amount) AS total_sales,
+    AVG(total_amount) AS avg_order_value
+FROM 
+    orders
+GROUP BY
+    sales_channel
+ORDER BY
+    SUM(total_amount) DESC;
+
+/*
+3. Valuable Customers — GROUP BY + HAVING
+
+Using orders, find customers who:
+
+Have placed at least 5 orders
+Have generated at least ₹100,000 in total order value
+
+Return:
+
+customer_id
+number of orders
+total order value
+average order value
+
+Sort by total order value descending.
+
+Concept focus: GROUP BY + HAVING
