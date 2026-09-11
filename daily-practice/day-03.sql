@@ -100,3 +100,23 @@ Sort by total order value descending.
 Focus: JOIN, COUNT(DISTINCT ...), GROUP BY, HAVING
 
 */
+
+
+SELECT
+    c.customer_segment,
+    COUNT(DISTINCT c.customer_id) AS number_of_unique_customer,
+    COUNT(o.order_id) AS number_of_orders,
+    SUM(o.total_amount) AS total_order_value,
+    AVG(o.total_amount) AS avg_order_value
+FROM
+    customers c
+JOIN
+    orders o
+ON
+    c.customer_id = o.customer_id
+GROUP BY
+    c.customer_segment
+HAVING
+    SUM(o.total_amount) >= 10000000
+ORDER BY
+    total_order_value DESC;
