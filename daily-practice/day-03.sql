@@ -194,3 +194,23 @@ Sort chronologically from January → December.
 Focus: date extraction + aggregation + CASE.
 
 */
+
+SELECT
+    EXTRACT(MONTH FROM order_date) AS month,
+    SUM(total_amount) AS total_delivered_sales,
+    COUNT(order_id) AS number_of_delivered_orders,
+    AVG(total_amount) AS average_order_value,
+    CASE 
+        WHEN SUM(total_amount) >= 1000000 THEN 'High'
+        WHEN SUM(total_amount) >= 500000  THEN 'Medium'
+        ELSE 'Low'
+    END AS sales_category
+FROM
+    orders
+WHERE
+    order_status = 'delivered'
+    AND EXTRACT(YEAR FROM order_date) = 2026
+GROUP BY
+    EXTRACT(MONTH FROM order_date)
+ORDER BY
+    month ASC;
