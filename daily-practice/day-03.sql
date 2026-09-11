@@ -120,3 +120,77 @@ HAVING
     SUM(o.total_amount) >= 10000000
 ORDER BY
     total_order_value DESC;
+
+/*
+
+4. Customer Order Behavior — Subquery
+
+Find customers whose total order value is greater than the average total order value across all customers.
+
+Return:
+
+customer_id
+total order value
+number of orders
+average order value
+
+Only consider delivered orders.
+
+Sort by total order value descending.
+
+Important: Don't calculate the overall average manually. Let SQL calculate it.
+
+Focus: aggregation + subquery + multi-level analytical reasoning.
+
+*/
+
+SELECT
+    customer_id,
+    SUM(total_amount) AS total_order_value,
+    COUNT(order_id) AS number_of_orders,
+    AVG(total_amount) AS avg_order_value
+FROM
+    orders
+WHERE
+    order_status = 'delivered'
+GROUP BY
+    customer_id
+HAVING
+    SUM(total_amount) > (
+        -- Subquery: Calculates the average total spend per customer
+        SELECT AVG(customer_total)
+        FROM (
+            SELECT SUM(total_amount) AS customer_total
+            FROM orders
+            WHERE order_status = 'delivered'
+            GROUP BY customer_id
+        ) AS customer_averages
+    )
+ORDER BY
+    total_order_value DESC;
+
+/*
+
+5. Monthly Revenue Classification — CASE + Date Analysis
+
+Using orders, analyze delivered orders from 2026.
+
+For each month, return:
+
+month
+total delivered sales
+number of delivered orders
+average order value
+a sales_category
+
+Classify each month based on total delivered sales:
+
+>= ₹10,00,000       → 'High'
+>= ₹5,00,000        → 'Medium'
+< ₹5,00,000         → 'Low'
+
+Sort chronologically from January → December.
+
+Focus: date extraction + aggregation + CASE.
+
+*/
