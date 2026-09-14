@@ -181,3 +181,49 @@ GROUP BY
 ORDER BY
     total_revenue DESC
 LIMIT 15;
+
+/*
+
+5. Customer Segment Performance
+
+Using customers and orders, calculate for each customer_segment:
+
+number of unique customers
+number of delivered orders
+total delivered revenue
+average delivered order value
+
+Only include segments having:
+
+at least 100 delivered orders
+at least ₹50,00,000 total delivered revenue
+
+Sort by total delivered revenue descending.
+
+Focus: combining JOIN + COUNT(DISTINCT) + GROUP BY + HAVING
+
+*/
+
+
+SELECT
+    c.customer_segment,
+    COUNT(DISTINCT c.customer_id) AS unique_customers,
+    COUNT(o.order_id) AS delivered_orders,
+    SUM(o.total_amount) AS revenue,
+    AVG(o.total_amount) AS average_delivered_order_value 
+FROM
+    customers c
+JOIN
+    orders o
+ON
+    c.customer_id = o.customer_id
+WHERE
+    o.order_status = 'delivered'
+GROUP BY
+    c.customer_segment
+HAVING
+    COUNT(o.order_id) >= 100
+    AND
+    SUM(o.total_amount) >= 5000000
+ORDER BY
+    revenue DESC;
