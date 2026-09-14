@@ -85,3 +85,57 @@ ORDER BY
     total_revenue DESC
 LIMIT
     20;
+
+/*
+
+3. Valuable Customers
+
+Using customers and orders, find customers who have:
+
+At least 5 delivered orders
+At least ₹1,00,000 total delivered order value
+
+Return:
+
+customer_id
+first_name
+last_name
+customer_segment
+number of delivered orders
+total delivered order value
+average delivered order value
+
+Sort by total delivered order value descending.
+
+Focus: JOIN, WHERE, GROUP BY, HAVING
+
+
+*/
+
+
+SELECT
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    c.customer_segment,
+    COUNT(o.order_id) AS number_of_delivered_orders,
+    SUM(o.total_amount) AS total_delivered_order_value,
+    AVG(o.total_amount) AS average_delivered_order_value
+FROM
+    customers c
+INNER JOIN
+    orders o
+ON
+    c.customer_id = o.customer_id
+WHERE
+    o.order_status = 'delivered'
+GROUP BY
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    c.customer_segment
+HAVING
+    COUNT(o.order_id) >=5
+    AND SUM(o.total_amount) >= 100000
+ORDER BY
+    total_delivered_order_value DESC;
