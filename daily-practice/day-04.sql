@@ -162,12 +162,11 @@ Focus: JOIN, COUNT(DISTINCT ...), SUM, GROUP BY
 
 */
 
-SELECT * FROM products;
-SELECT * FROM order_items;
+
 
 SELECT
     p.brand,
-    COUNT(DISTINCT oi.order_id) AS num_of_product_sold,
+    COUNT(DISTINCT p.product_name) AS num_of_product_sold,
     SUM(oi.quantity) AS quantity_sold,
     SUM(oi.quantity * oi.unit_price) AS total_revenue
 FROM
@@ -176,6 +175,8 @@ JOIN
     order_items oi
 ON
     p.product_id = oi.product_id
+WHERE 
+    oi.quantity > 0
 GROUP BY
     p.brand
 ORDER BY
