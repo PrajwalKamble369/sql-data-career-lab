@@ -139,3 +139,45 @@ HAVING
     AND SUM(o.total_amount) >= 100000
 ORDER BY
     total_delivered_order_value DESC;
+
+/*
+
+4. Brand Revenue Analysis
+
+Using products and order_items, calculate for each brand:
+
+brand
+number of different products sold
+total quantity sold
+total revenue
+
+Requirements:
+
+Only positive quantities
+Only products appearing in order_items
+Sort by total revenue descending
+Return the top 15 brands
+
+Focus: JOIN, COUNT(DISTINCT ...), SUM, GROUP BY
+
+*/
+
+SELECT * FROM products;
+SELECT * FROM order_items;
+
+SELECT
+    p.brand,
+    COUNT(DISTINCT oi.order_id) AS num_of_product_sold,
+    SUM(oi.quantity) AS quantity_sold,
+    SUM(oi.quantity * oi.unit_price) AS total_revenue
+FROM
+    products p
+JOIN
+    order_items oi
+ON
+    p.product_id = oi.product_id
+GROUP BY
+    p.brand
+ORDER BY
+    total_revenue DESC
+LIMIT 15;
