@@ -42,3 +42,46 @@ ORDER BY
     total_amount DESC,
     order_date DESC
 LIMIT 20;
+
+
+/*
+
+2. Product Performance Summary
+
+Using order_items, calculate for each product_id:
+
+product_id
+number of order items
+total quantity sold
+total revenue
+average selling price
+
+Requirements:
+
+Only include rows where quantity > 0
+unit_price must not be NULL
+Revenue = quantity × unit_price
+Sort by total revenue descending
+Return the top 20 products
+
+Focus: COUNT, SUM, AVG, arithmetic, GROUP BY, NULL filtering
+
+*/
+SELECT
+    product_id,
+    COUNT(order_id) AS number_of_order_items,
+    SUM(quantity) AS total_quantity_sold,
+    SUM(unit_price * quantity) AS total_revenue,
+    AVG(unit_price) AS avg_selling_price
+FROM
+    order_items
+WHERE
+    quantity > 0
+AND
+    unit_price IS NOT NULL
+GROUP BY
+    product_id
+ORDER BY
+    total_revenue DESC
+LIMIT
+    20;
