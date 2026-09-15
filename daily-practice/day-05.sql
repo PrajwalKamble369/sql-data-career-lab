@@ -136,3 +136,82 @@ ORDER BY
     total_revenue DESC
 LIMIT 10;
 
+/*
+
+4. Customer Segment — Order Quality
+
+Using customers and orders, calculate for each customer_segment:
+
+number of unique customers
+total orders
+delivered orders
+cancelled orders
+total order value
+
+Consider all orders.
+
+Only include segments having at least 50 unique customers.
+
+Sort by total order value descending.
+
+Focus: multiple aggregations, COUNT, COUNT(DISTINCT), conditional counting, GROUP BY, HAVING
+
+This is your first problem where you'll need to think carefully about how to count different subsets of rows inside the same group.
+
+5. Product Revenue Leaderboard Preparation
+
+Using products and order_items, find products that meet both conditions:
+
+sold quantity is at least 100 units
+total revenue is at least ₹1,00,000
+
+Return:
+
+product_id
+product_name
+brand
+total quantity sold
+total revenue
+average selling price
+
+Only consider:
+
+quantity > 0
+non-NULL unit_price
+
+Sort by total revenue descending and return the top 25.
+
+Focus: multi-table JOIN, aggregation, GROUP BY, HAVING, multiple business conditions.
+
+Day 5 progression
+
+P1 → basic JOIN + aggregation
+P2 → revenue metrics + HAVING
+P3 → DISTINCT aggregation + NULL handling
+P4 → multiple conditional metrics in one query
+P5 → combined business rules + aggregation
+
+No solutions. Submit your SQL when you've worked through them, and I'll review each one individually and update your progress.
+
+*/
+
+
+SELECT
+    c.customer_segment,
+    COUNT(DISTINCT c.customer_id) AS number_of_unique_customers,
+    COUNT(o.order_id) AS total_orders,
+    COUNT(CASE WHEN o.order_status = 'delivered' THEN 1 END) AS total_orders, 
+    COUNT(CASE WHEN o.order_status = 'cancelled' THEN 1 END) AS delivered_orders,
+    SUM(o.total_amount) AS total_order_value
+FROM
+    customers c
+JOIN
+    orders o
+ON
+    c.customer_id = o.customer_id
+GROUP BY
+    c.customer_segment
+HAVING
+    COUNT(DISTINCT c.customer_id) >=50
+ORDER BY
+    total_order_value DESC;
