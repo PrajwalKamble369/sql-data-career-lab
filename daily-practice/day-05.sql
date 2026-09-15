@@ -215,3 +215,63 @@ HAVING
     COUNT(DISTINCT c.customer_id) >=50
 ORDER BY
     total_order_value DESC;
+
+
+/*
+
+5. Product Revenue Leaderboard Preparation
+
+Using products and order_items, find products that meet both conditions:
+
+sold quantity is at least 100 units
+total revenue is at least ₹1,00,000
+
+Return:
+
+product_id
+product_name
+brand
+total quantity sold
+total revenue
+average selling price
+
+Only consider:
+
+quantity > 0
+non-NULL unit_price
+
+Sort by total revenue descending and return the top 25.
+
+Focus: multi-table JOIN, aggregation, GROUP BY, HAVING, multiple business conditions.
+
+*/
+
+
+SELECT
+    p.product_id,
+    p.product_name,
+    p.brand,
+    SUM(oi.quantity) AS total_quantity_sold,
+    SUM(oi.quantity * oi.unit_price) AS total_revenue,
+    AVG(oi.unit_price) AS average_selling_price
+FROM 
+    products p
+JOIN 
+    order_items oi 
+ON 
+    p.product_id = oi.product_id
+WHERE 
+    oi.quantity > 0
+AND 
+    oi.unit_price IS NOT NULL
+GROUP BY 
+    p.product_id,
+    p.product_name,
+    p.brand
+HAVING 
+    SUM(oi.quantity) >= 100
+AND 
+    SUM(oi.quantity * oi.unit_price) >= 100000
+ORDER BY 
+    total_revenue DESC
+LIMIT 25;
