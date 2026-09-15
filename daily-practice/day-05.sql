@@ -87,3 +87,52 @@ HAVING
     SUM(o.total_amount) >= 50000
 ORDER BY
     total_delivered_revenue DESC;
+
+
+/*
+
+3. Category Sales Performance
+
+Using products and order_items, calculate for each category:
+
+category
+number of unique products sold
+total quantity sold
+total revenue
+
+Requirements:
+
+Only include quantity > 0
+Ignore rows where unit_price is NULL
+Count unique products, not order items
+Sort by total revenue descending
+
+Return the top 10 categories.
+
+Focus: JOIN, COUNT(DISTINCT ...), SUM, GROUP BY, NULL handling
+
+*/
+
+
+
+SELECT
+    p.product_name, -- category field is not in this table so used prouct
+    COUNT(DISTINCT p.product_id) AS number_of_unique_products_sold,
+    SUM(oi.quantity) AS total_quantity_sold,
+    SUM(oi.quantity * oi.unit_price) AS total_revenue
+FROM
+    products p
+JOIN
+    order_items oi
+ON
+    p.product_id = oi.product_id
+WHERE
+    oi.quantity >0
+AND
+    oi.unit_price IS NOT NULL
+GROUP BY
+    p.product_name
+ORDER BY
+    total_revenue DESC
+LIMIT 10;
+
