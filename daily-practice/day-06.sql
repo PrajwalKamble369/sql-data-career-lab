@@ -245,3 +245,25 @@ This is the most important problem today: you need to calculate several differen
 
 
 */
+
+SELECT 
+    c.customer_segment,
+    COUNT(DISTINCT c.customer_id) AS unique_customers,
+    COUNT(o.order_id) AS total_orders,
+    COUNT(CASE WHEN o.order_status = 'delivered' THEN o.order_id END) AS delivered_orders,
+    COUNT(CASE WHEN o.order_status = 'cancelled' THEN o.order_id END) AS cancelled_orders,
+    SUM(CASE WHEN o.order_status = 'delivered' THEN o.order_amount ELSE 0 END) AS delivered_revenue,
+    AVG(CASE WHEN o.order_status = 'delivered' THEN o.order_amount END) AS avg_delivered_order_value,
+    ROUND(
+        100.0 * COUNT(CASE WHEN o.order_status = 'delivered' THEN o.order_id END) / COUNT(o.order_id), 
+        2
+    ) AS delivered_order_percentage
+FROM customers c
+JOIN orders o 
+    ON c.customer_id = o.customer_id
+GROUP BY 
+    c.customer_segment
+HAVING 
+    COUNT(o.order_id) >= 100
+ORDER BY 
+    delivered_order_percentage DESC;
