@@ -148,3 +148,100 @@ GROUP BY
 ORDER BY
     total_revenue DESC
 LIMIT 20;
+
+/*
+
+4. Customer Activity Classification
+
+Difficulty: 🟡 → 🔴
+Focus: LEFT JOIN · conditional counting · CASE · GROUP BY
+
+Using customers and orders, include every customer, even customers with zero delivered orders.
+
+Return:
+
+customer_id
+first_name
+last_name
+delivered_order_count
+activity_level
+
+Classification:
+
+10+ → Very Active
+5–9 → Active
+1–4 → Occasional
+0 → Inactive
+
+Only delivered orders should contribute to the count.
+
+Sort by:
+
+delivered_order_count descending
+customer_id ascending
+
+The key challenge is deciding where the delivered-order condition belongs so that inactive customers aren't accidentally removed.
+
+*/
+
+SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    COUNT(CASE WHEN o.order_status = 'delivered' THEN o.order_id END) AS delivered_order_count,
+    CASE 
+        WHEN COUNT(CASE WHEN o.order_status = 'delivered' THEN o.order_id END) >= 10 THEN 'Very Active'
+        WHEN COUNT(CASE WHEN o.order_status = 'delivered' THEN o.order_id END) BETWEEN 5 AND 9 THEN 'Active'
+        WHEN COUNT(CASE WHEN o.order_status = 'delivered' THEN o.order_id END) BETWEEN 1 AND 4 THEN 'Occasional'
+        ELSE 'Inactive'
+    END AS activity_level
+FROM customers c
+LEFT JOIN orders o 
+    ON c.customer_id = o.customer_id
+GROUP BY 
+    c.customer_id,
+    c.first_name,
+    c.last_name
+ORDER BY 
+    delivered_order_count DESC,
+    c.customer_id ASC;
+
+
+/*
+
+5. Revenue Quality by Customer Segment
+
+Difficulty: 🔴 Hard
+Focus: conditional aggregation · CASE · arithmetic · ROUND() · HAVING
+
+Using customers and orders, return one row per customer_segment:
+
+customer_segment
+unique_customers
+total_orders
+delivered_orders
+cancelled_orders
+delivered_revenue
+avg_delivered_order_value
+delivered_order_percentage
+
+Calculate:
+
+delivered_order_percentage = delivered_orders / total_orders × 100
+
+Rules:
+
+Count customers uniquely.
+Count all orders.
+Count delivered orders separately.
+Count cancelled orders separately.
+Revenue should come only from delivered orders.
+Average order value should use only delivered orders.
+Round the percentage to 2 decimal places.
+Include only segments with at least 100 total orders.
+Sort by delivered_order_percentage descending.
+
+This is the most important problem today: you need to calculate several different metrics from the same grouped dataset without filtering away the rows needed for other metrics.
+
+
+*/
