@@ -99,3 +99,52 @@ WHERE
 ORDER BY
     total_amount DESC NULLS LAST
 LIMIT 30;
+
+/*
+
+3. Product Revenue With Missing Prices
+
+Difficulty: 🟡 Medium
+Focus: JOIN · COALESCE() · aggregation · NULL handling
+
+Using products and order_items, return:
+
+product_id
+product_name
+brand
+total_quantity_sold
+total_revenue
+number_of_order_items
+
+Rules:
+
+Only include quantity > 0.
+unit_price can be NULL.
+Treat NULL unit_price as 0 when calculating revenue.
+Sort by total_revenue descending.
+Return the top 20 products.
+
+Think about this as preparing a clean product-level dataset for analytics or an ML pipeline.
+
+*/
+
+SELECT
+    p.product_id,
+    p.product_name,
+    p.brand,
+    SUM(oi.quantity) AS total_quantity_sold,
+    SUM(oi.quantity * COALESCE(oi.unit_price, 0)) AS total_revenue,
+    COUNT(oi.order_item_id) AS number_of_order_items -- Assuming primary key of order_items table
+FROM
+    products p
+JOIN
+    order_items oi ON p.product_id = oi.product_id
+WHERE
+    oi.quantity > 0 -- Filters out non-positive quantities
+GROUP BY
+    p.product_id,
+    p.product_name,
+    p.brand
+ORDER BY
+    total_revenue DESC
+LIMIT 20;
