@@ -151,3 +151,42 @@ HAVING
             orders)
 ORDER BY
     avg_order_value DESC;
+
+
+/*
+
+4. Products That Have Never Been Ordered
+
+Difficulty: 🔴
+Focus: subquery + NOT EXISTS / anti-join thinking
+
+Find products that have never appeared in order_items.
+
+Return:
+
+product_id
+product_name
+brand
+price
+
+Sort by product_id ascending.
+
+Important: Solve this using a subquery approach. You can later compare it with a LEFT JOIN solution.
+
+This is a common data-quality/business problem: identifying products that exist in the catalog but have no transactional activity.
+
+*/
+
+SELECT
+    p.product_id,
+    p.product_name,
+    p.brand,
+    p.price
+FROM
+    products p
+WHERE NOT EXISTS
+    (SELECT 1
+    FROM order_items oi
+    WHERE oi.product_id = p.product_id)
+ORDER BY
+    p.product_id ASC
