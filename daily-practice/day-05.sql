@@ -202,6 +202,7 @@ SELECT
     COUNT(o.order_id) AS total_orders,
     COUNT(CASE WHEN o.order_status = 'delivered' THEN 1 END) AS delivered_orders, 
     COUNT(CASE WHEN o.order_status = 'cancelled' THEN 1 END) AS cancelled_order,
+    
     SUM(o.total_amount) AS total_order_value
 FROM
     customers c
