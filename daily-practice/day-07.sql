@@ -52,3 +52,42 @@ HAVING
     COUNT(o.order_id) >= 100000
 ORDER BY
     total_order_value DESC;
+
+/*
+
+2. Products Above Average Price
+
+Difficulty: 🟡
+Focus: scalar subquery + filtering
+
+Using products, find products whose price is greater than the overall average product price.
+
+Return:
+
+product_id
+product_name
+brand
+price
+
+Sort by price descending.
+
+Challenge: The average price should be calculated dynamically from the table, not manually determined.
+
+*/
+
+
+SELECT
+    product_id,
+    product_name,
+    brand,
+    price
+FROM 
+    products
+WHERE
+    price >
+        (SELECT
+            AVG(price) 
+        FROM
+            products)
+ORDER BY
+    price DESC;
