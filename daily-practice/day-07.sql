@@ -189,4 +189,33 @@ WHERE NOT EXISTS
     FROM order_items oi
     WHERE oi.product_id = p.product_id)
 ORDER BY
-    p.product_id ASC
+    p.product_id ASC;
+
+/*
+
+5. Customers Spending More Than Their Segment Average
+
+Difficulty: 🔴🔥
+Focus: correlated/subquery thinking + aggregation + joins
+
+For each customer, calculate their total delivered revenue.
+
+Then identify customers whose delivered revenue is greater than the average delivered revenue of customers in their own customer_segment.
+
+Return:
+
+customer_id
+first_name
+last_name
+customer_segment
+total_delivered_revenue
+segment_average_revenue
+
+Only include customers with at least one delivered order.
+
+Sort by:
+
+customer_segment ascending
+total_delivered_revenue descending
+
+*/
